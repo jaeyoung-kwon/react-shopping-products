@@ -5238,8 +5238,7 @@ const products = [
     quantity: 2
   }
 ];
-var define_import_meta_env_default = { BASE_URL: "/react-shopping-products/", MODE: "production", DEV: false, PROD: true, SSR: false };
-const baseURL = define_import_meta_env_default.VITE_BASE_URL;
+const baseURL = "http://techcourse-lv2-alb-974870821.ap-northeast-2.elb.amazonaws.com/";
 const handlers = [
   http.get(`${baseURL}/products`, ({ request }) => {
     const url = new URL(request.url);
