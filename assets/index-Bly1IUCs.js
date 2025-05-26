@@ -14007,17 +14007,18 @@ const Container$9 = newStyled.div`
   border: 1px solid grey;
   overflow: hidden;
 `;
+var define_import_meta_env_default = { BASE_URL: "/react-shopping-products/", MODE: "production", DEV: false, PROD: true, SSR: false };
 async function baseAPI({
   method,
   path,
   body
 }) {
-  const baseURL = "http://techcourse-lv2-alb-974870821.ap-northeast-2.elb.amazonaws.com";
+  const baseURL = define_import_meta_env_default.VITE_BASE_URL;
   const result = await fetch(`${baseURL}${path}`, {
     method,
     headers: {
       Authorization: `Basic ${btoa(
-        `${"jaeyoung-kwon"}:${"password"}`
+        `${define_import_meta_env_default.VITE_USER_ID}:${define_import_meta_env_default.VITE_PASSWORD}`
       )}`,
       "Content-Type": "application/json"
     },
