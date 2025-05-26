@@ -28067,7 +28067,7 @@ function App() {
   ] });
 }
 async function enableMocking() {
-  const { worker } = await __vitePreload(() => import("./browser-Dm7Fm2-x.js"), true ? [] : void 0);
+  const { worker } = await __vitePreload(() => import("./browser-BUjuGW0C.js"), true ? [] : void 0);
   const isLocalhost = location.hostname === "localhost";
   return worker.start({
     serviceWorker: {
