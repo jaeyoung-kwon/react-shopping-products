@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { getSnapshot, subscribe, updateData } from '@/services/dataStore';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+  useSyncExternalStore,
+} from 'react';
 
 const cache = new Map<string, { data: unknown; updatedAt: number }>();
 
@@ -9,8 +16,9 @@ interface useJaeOProps<T> {
 }
 
 export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
-  const [data, setData] = useState<T>(
-    () => (cache.get(fetchKey)?.data ?? []) as T
+  const data = useSyncExternalStore(
+    useCallback((cb) => subscribe(fetchKey, cb), [fetchKey]),
+    () => getSnapshot(fetchKey)
   );
   const [isLoading, setIsLoading] = useState(!cache.get(fetchKey));
   const [isError, setIsError] = useState(false);
@@ -26,8 +34,7 @@ export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
       try {
         const data = await fetchFnRef.current();
         if (!ignore) {
-          cache.set(fetchKey, { data, updatedAt: Date.now() });
-          setData(data);
+          updateData(fetchKey, { data, updatedAt: Date.now() });
         }
       } catch {
         setIsError(true);
@@ -56,18 +63,14 @@ export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
   useEffect(() => {
     let ignore = false;
 
-    const cached = cache.get(fetchKey);
-    if (cached) {
-      setData(cached.data as T);
-      setIsLoading(false);
-    } else {
-      fetchAndSetData(ignore);
-    }
+    fetchAndSetData(ignore);
 
     return () => {
       ignore = true;
     };
   }, [fetchAndSetData, fetchKey]);
 
-  return { data, isLoading, isError, refetch };
+  if (!data) return { data: null, isLoading, isError, refetch };
+
+  return { data: data.data as T, isLoading, isError, refetch };
 }
