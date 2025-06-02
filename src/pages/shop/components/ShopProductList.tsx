@@ -1,13 +1,13 @@
+import { buildQueryString } from '@/api/buildQueryString';
+import { Loading } from '@/components/common';
+import { Cart, getShoppingCartList } from '@/components/features/cart';
 import {
   getProductList,
   ProductCard,
   type Product,
 } from '@/components/features/product';
-import { useCartContext } from '@/components/features/cart';
-import styled from '@emotion/styled';
 import { useJaeO } from '@/hooks/useJaeO';
-import { Loading } from '@/components/common';
-import { buildQueryString } from '@/api/buildQueryString';
+import styled from '@emotion/styled';
 
 function ShopProductList({
   filter,
@@ -33,7 +33,10 @@ function ShopProductList({
       return getProductList(filter);
     },
   });
-  const { cartList } = useCartContext();
+  const { data: cartList } = useJaeO<Cart[]>({
+    fetchKey: 'cartItems',
+    fetchFn: getShoppingCartList,
+  });
 
   if (isLoading) return <Loading />;
 
@@ -41,22 +44,23 @@ function ShopProductList({
 
   return (
     <Container>
-      {products.map(({ id, name, price, imageUrl, quantity }) => {
-        const matchingCart = cartList.find((cart) => cart.product.id === id);
-        return (
-          <ProductCard
-            key={id}
-            id={id}
-            cartId={matchingCart?.id}
-            cartCount={matchingCart?.quantity ?? 0}
-            name={name}
-            price={price}
-            imageUrl={imageUrl}
-            isInCart={Boolean(matchingCart)}
-            quantity={quantity}
-          />
-        );
-      })}
+      {products &&
+        products.map(({ id, name, price, imageUrl, quantity }) => {
+          const matchingCart = cartList?.find((cart) => cart.product.id === id);
+          return (
+            <ProductCard
+              key={id}
+              id={id}
+              cartId={matchingCart?.id}
+              cartCount={matchingCart?.quantity ?? 0}
+              name={name}
+              price={price}
+              imageUrl={imageUrl}
+              isInCart={Boolean(matchingCart)}
+              quantity={quantity}
+            />
+          );
+        })}
     </Container>
   );
 }

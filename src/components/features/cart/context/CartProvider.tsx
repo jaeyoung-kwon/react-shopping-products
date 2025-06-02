@@ -12,17 +12,19 @@ export const CartContext = createContext<{
 
 function CartProvider({ children }: { children: React.ReactNode }) {
   const { data: cartList, refetch } = useJaeO<Cart[]>({
-    fetchKey: '/cart-items',
+    fetchKey: 'cartItems',
     fetchFn: () => {
       return getShoppingCartList();
     },
     onError: () => showErrorToast('장바구니를 불러오는 데 실패했습니다.'),
   });
 
-  const cartCount = useMemo(() => cartList.length, [cartList]);
+  const cartCount = useMemo(() => cartList?.length ?? 0, [cartList]);
 
   return (
-    <CartContext.Provider value={{ cartList, cartCount, refetch }}>
+    <CartContext.Provider
+      value={{ cartList: cartList ?? [], cartCount, refetch }}
+    >
       {children}
     </CartContext.Provider>
   );

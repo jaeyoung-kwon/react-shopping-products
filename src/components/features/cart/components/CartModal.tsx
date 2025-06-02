@@ -1,13 +1,20 @@
-import { Flex } from '@/components/common';
+import { Flex, Loading } from '@/components/common';
 import { ProductRowCard } from '@/components/features/product';
+import { useJaeO } from '@/hooks/useJaeO';
 import styled from '@emotion/styled';
 import { Modal } from '@jae-o/modal-component-module';
-import { useCartContext } from '../context';
+import { getShoppingCartList } from '../api';
+import { Cart } from '../type';
 
 function CartModal() {
-  const { cartList } = useCartContext();
+  const { data } = useJaeO<Cart[]>({
+    fetchKey: 'cartItems',
+    fetchFn: getShoppingCartList,
+  });
 
-  const totalPrice = cartList.reduce(
+  if (!data) return <Loading />;
+
+  const totalPrice = data.reduce(
     (acc, curCart) => acc + curCart.quantity * curCart.product.price,
     0
   );
@@ -19,7 +26,7 @@ function CartModal() {
       position="bottom"
       style={{ maxHeight: 'calc(100% - 120px)', overflow: 'auto' }}
     >
-      {cartList.map(({ id, quantity, product }) => (
+      {data.map(({ id, quantity, product }) => (
         <Flex key={id}>
           <Separator />
           <ProductRowCard
