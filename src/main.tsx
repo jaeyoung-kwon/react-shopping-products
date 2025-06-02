@@ -7,6 +7,9 @@ async function enableMocking() {
 
   return worker.start({
     onUnhandledRequest: 'bypass',
+    serviceWorker: {
+      url: '/react-shopping-products/mockServiceWorker.js',
+    },
   });
 }
 

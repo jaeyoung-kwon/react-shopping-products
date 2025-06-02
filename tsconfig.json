@@ -24,6 +24,7 @@
     "types": ["jest", "@testing-library/jest-dom", "node"],
     "esModuleInterop": true,
 
+    "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
