@@ -1,9 +1,19 @@
 import { Header } from '@/components/common';
-import { useCartContext } from '@/components/features/cart';
+import { Cart, getShoppingCartList } from '@/components/features/cart';
+import { useJaeO } from '@/hooks/useJaeO';
 import CartButton from './CartButton';
 
 function ShopHeader() {
-  const { cartCount } = useCartContext();
-  return <Header title="SHOP" right={<CartButton itemsCount={cartCount} />} />;
+  const { data: cartList } = useJaeO<Cart[]>({
+    fetchKey: 'cartItems',
+    fetchFn: getShoppingCartList,
+  });
+
+  return (
+    <Header
+      title="SHOP"
+      right={<CartButton itemsCount={cartList?.length ?? 0} />}
+    />
+  );
 }
 export default ShopHeader;

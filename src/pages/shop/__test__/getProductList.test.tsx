@@ -1,15 +1,10 @@
-import { CartProvider } from '@/components/features/cart';
+import productsMockData from '@/mocks/data/mock-products.json';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import ShopPage from '../ShopPage';
-import productsMockData from '@/mocks/data/mock-products.json';
 
 describe('삼품 목록 기능 테스트', () => {
   beforeEach(() => {
-    render(
-      <CartProvider>
-        <ShopPage />
-      </CartProvider>
-    );
+    render(<ShopPage />);
   });
 
   it('서버에 상품 목록이 정상적으로 불러올 경우 20개의 상품 목록이 보여진다', async () => {

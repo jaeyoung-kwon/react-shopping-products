@@ -1,4 +1,3 @@
-import { CartProvider } from '@/components/features/cart';
 import { resetCartItems } from '@/mocks/handlers';
 import {
   fireEvent,
@@ -13,11 +12,7 @@ describe('SHOP 페이지에 접속 시', () => {
   beforeEach(() => {
     resetCartItems();
 
-    render(
-      <CartProvider>
-        <ShopPage />
-      </CartProvider>
-    );
+    render(<ShopPage />);
   });
 
   it('장바구니 아이콘에 현재 장바구니 아이템 수가 표시된다', async () => {
