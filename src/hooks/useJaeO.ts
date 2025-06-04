@@ -32,7 +32,11 @@ export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
 
     try {
       const data = await fetchFnRef.current();
-      updateData(fetchKey, { data, updatedAt: Date.now() });
+      updateData(fetchKey, {
+        data,
+        updatedAt: Date.now(),
+        fetchFn: fetchFnRef.current,
+      });
     } catch {
       setIsError(true);
       onErrorRef.current?.();
