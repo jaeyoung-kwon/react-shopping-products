@@ -45,7 +45,12 @@ function ProductRowCard({
             <CartProductTitle>{name}</CartProductTitle>
             <CartProductPrice>{`${price.toLocaleString()}원`}</CartProductPrice>
           </CartProductInfo>
-          <DeleteButton onClick={() => deleteCart(cartId)}>
+          <DeleteButton
+            onClick={() => {
+              if (!cartId) return;
+              deleteCart(cartId);
+            }}
+          >
             <DeleteButtonText>삭제</DeleteButtonText>
           </DeleteButton>
         </Flex>
@@ -53,18 +58,27 @@ function ProductRowCard({
           {cartCount === 1 ? (
             <UpdateCartButton
               actionType="delete"
-              onClick={() => deleteCart(cartId)}
+              onClick={() => {
+                if (!cartId) return;
+                deleteCart(cartId);
+              }}
             />
           ) : (
             <UpdateCartButton
               actionType="minus"
-              onClick={() => updateCart(cartId, cartCount - 1)}
+              onClick={() => {
+                if (!cartId) return;
+                updateCart({ id: cartId, quantity: cartCount - 1 });
+              }}
             />
           )}
           <Text>{cartCount}</Text>
           <UpdateCartButton
             actionType="plus"
-            onClick={() => updateCart(cartId, cartCount + 1)}
+            onClick={() => {
+              if (!cartId) return;
+              updateCart({ id: cartId, quantity: cartCount + 1 });
+            }}
           />
         </UpdateCartBox>
       </InfoBox>

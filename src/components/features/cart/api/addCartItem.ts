@@ -1,7 +1,7 @@
 import { baseAPI } from '@/api/baseAPI';
 
 export async function addCartItem(id: string) {
-  return baseAPI({
+  return baseAPI<null>({
     method: 'POST',
     path: `/cart-items`,
     body: {
