@@ -26,31 +26,22 @@ export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
   const fetchFnRef = useRef(fetchFn);
   const onErrorRef = useRef(onError);
 
-  const fetchAndSetData = useCallback(
-    async (ignore: boolean) => {
-      setIsLoading(true);
-      setIsError(false);
+  const fetchAndSetData = useCallback(async () => {
+    setIsLoading(true);
+    setIsError(false);
 
-      try {
-        const data = await fetchFnRef.current();
-        if (!ignore) {
-          updateData(fetchKey, { data, updatedAt: Date.now() });
-        }
-      } catch {
-        setIsError(true);
-        onErrorRef.current?.();
-      } finally {
-        if (!ignore) {
-          setIsLoading(false);
-        }
-      }
-    },
-    [fetchKey]
-  );
+    try {
+      const data = await fetchFnRef.current();
+      updateData(fetchKey, { data, updatedAt: Date.now() });
+    } catch {
+      setIsError(true);
+      onErrorRef.current?.();
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchKey]);
 
-  const refetch = useCallback(() => {
-    return fetchAndSetData(false);
-  }, [fetchAndSetData]);
+  const refetch = useCallback(fetchAndSetData, [fetchAndSetData]);
 
   useEffect(() => {
     fetchFnRef.current = fetchFn;
@@ -61,13 +52,7 @@ export function useJaeO<T>({ fetchKey, fetchFn, onError }: useJaeOProps<T>) {
   }, [onError]);
 
   useEffect(() => {
-    let ignore = false;
-
-    fetchAndSetData(ignore);
-
-    return () => {
-      ignore = true;
-    };
+    fetchAndSetData();
   }, [fetchAndSetData, fetchKey]);
 
   if (!data) return { data: null, isLoading, isError, refetch };
